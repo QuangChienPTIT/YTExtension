@@ -1,0 +1,11 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
+.content-extension{
+    width: 300px;
+    height: 300px;
+    border-radius: 30px;
+    padding: 10px;
+}
