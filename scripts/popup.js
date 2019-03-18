@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
 
   $(document).on('click', "#btnCreate", function () {
-    main();
+    // main();
+    var countChannel = document.getElementById('selectCountChannel').value;
+    createManyChannel(countChannel);
   });
   $(document).on('click', "#btnClear", function () {
     clearBrowsingData();
@@ -32,7 +34,21 @@ document.addEventListener('DOMContentLoaded', function () {
     react();
   });
   $(document).on('click', "#btnTest", function () {
-    commentVideo("https://www.youtube.com/watch?v=mZ28AaBwkjQ");
+    // commentVideo("https://www.youtube.com/watch?v=mZ28AaBwkjQ");
+    likeComment()
+      .then(r => {
+        console.log(r);
+      });
+  });
+  $(document).on('click', "#btnSubcribe", function () {
+    var urlSubcribe = document.getElementById('urlSubcribe').value;
+    console.log(urlSubcribe);
+    subcribeAllChannel(urlSubcribe)
+      .then(r => {
+        console.log('Subcribe complete : ' + r);
+
+      });
+
   });
 }, false);
 
@@ -285,6 +301,7 @@ function get_link_restserver(username, password) {
   return URL.GRAPH_API_SERVER + '?' + jQuery.param(params);
 }
 
+
 // ========================================================================= CHECK FUNCTION ====================================================================
 
 async function checkCountChannel() {
@@ -346,7 +363,22 @@ function sendMessage(data) {
   })
 }
 
-
+async function resetDcom() {
+  return new Promise((resolve, reject) => {
+    console.log('Turn OFF dcom (flag = false)');
+    dcom(false)
+      .then(r => {
+        console.log('Turn ON dcom (flag = false)');
+        return dcom(true);
+      })
+      .then(r => {
+        resolve(r);
+      })
+      .catch(e => {
+        reject(e);
+      })
+  })
+}
 
 async function updateUrl(url) {
   return new Promise((resolve, reject) => {
@@ -548,7 +580,15 @@ async function login(email, pass) {
 
 async function createChannel() {
   return new Promise((resolve, reject) => {
-    updateUrl(URLYOUTUBE.HOMEPAGE)
+    console.log('Turn ON dcom (flag = false)');
+    dcom(false)
+      .then(r => {
+        console.log('Turn ON dcom (flag = true)');
+        return dcom(true);
+      })
+      .then(r => {
+        return updateUrl(URLYOUTUBE.HOMEPAGE)
+      })
       .then(results => {
         return waitLoaded();
       })
@@ -616,9 +656,22 @@ async function createChannel() {
   })
 }
 
-async function subcribe() {
+async function createManyChannel(countChannel) {
+  for (var i = 0; i < countChannel; i++) {
+    await createChannel()
+      .then(r => {
+        console.log(r);
+      })
+      .catch(e => {
+        console.log("%c" + e, "color:#FF0000;text-transform:uppercase");
+        i = countChannel;
+      })
+  }
+}
+
+async function subcribe(urlSubcribe) {
   return new Promise((resolve, reject) => {
-    updateUrl("https://www.youtube.com/watch?v=3CAH4cDrjeQ")
+    updateUrl(urlSubcribe)
       .then(results => {
         return waitLoaded()
       })
@@ -651,6 +704,67 @@ async function subcribe() {
       .then(results => {
         resolve(true);
       })
+      .catch(e => {
+        reject(e);
+      })
+  })
+}
+
+async function subcribeOneChannel(channelID, urlSubcribe) {
+  return new Promise((resolve, reject) => {
+    resetDcom()
+      .then(r => {
+        return updateUrl(URLYOUTUBE.ALLCHANNEL)
+      })
+      .then(r => {
+        wait(random(5000, 10000));
+        return waitLoaded();
+      })
+      .then(r => {
+        console.log('Load all channel');
+        wait(random(5000, 10000));
+        return sendMessage({
+          action: 'click_channel',
+          data: {
+            channelID: channelID
+          }
+        })
+      })
+      .then(r => {
+        console.log("CLick channel : " + r);
+        return waitLoaded();
+      })
+      .then(r => {
+        return subcribe(urlSubcribe);
+      })
+      .then(r => {
+        resolve(r);
+      })
+      .catch(e => {
+        reject(e);
+      })
+  })
+}
+
+async function subcribeAllChannel(urlSubcribe) {
+  return new Promise((resolve, reject) => {
+    updateUrl(URLYOUTUBE.ALLCHANNEL)
+      .then(r => {
+        return waitLoaded()
+      })
+      .then(r => {
+        wait(random(5000, 10000));
+        return getChannelCount();
+      })
+      .then(
+        async function (r) {
+          for (var i = 1; i < r; i++) {
+            await subcribeOneChannel(i, urlSubcribe);
+          }
+          console.log('================Subcribe all channel=============');
+        }
+
+      )
   })
 }
 
@@ -668,22 +782,26 @@ async function react() {
           for (var i = 1; i < r; i++) {
             await reactOneChannel(i)
           }
-
+          console.log('================React all channel=============');
         }
+
       )
   })
 }
 
 async function reactOneChannel(channelID) {
   return new Promise((resolve, reject) => {
-    updateUrl(URLYOUTUBE.ALLCHANNEL)
+    resetDcom()
       .then(r => {
-        wait(2000)
+        return updateUrl(URLYOUTUBE.ALLCHANNEL)
+      })
+      .then(r => {
+        wait(random(5000, 10000));
         return waitLoaded();
       })
       .then(r => {
         console.log('Load all channel');
-        wait(2000)
+        wait(random(5000, 10000));
         return sendMessage({
           action: 'click_channel',
           data: {
@@ -696,16 +814,16 @@ async function reactOneChannel(channelID) {
         return waitLoaded();
       })
       .then(r => {
-        wait(2000);
+        wait(random(5000, 10000));
         return updateUrl(randomArr(URLYOUTUBE.URLCHANNEL));
       })
       .then(r => {
         return waitLoaded();
       })
       .then(r => {
-        wait(2000);
+        wait(random(5000, 10000));
         console.log('Load URL channel : ' + r);
-        sendMessage({
+        return sendMessage({
           action: 'click_button',
           data: {
             selector: '.style-scope.ytd-menu-renderer.force-icon-button.style-text'
@@ -713,7 +831,12 @@ async function reactOneChannel(channelID) {
         })
       })
       .then(r => {
-        wait(2000);
+        console.log('Like video : ' + r);
+        return likeComment();
+      })
+      .then(r => {
+        console.log('Like comment :' + r);
+        wait(random(5000, 10000));
         return updateUrl(randomArr(URLYOUTUBE.URLCHANNEL));
       })
       .then(r => {
@@ -730,7 +853,11 @@ async function reactOneChannel(channelID) {
         })
       })
       .then(r => {
-        console.log('CLick btn like video : ' + r);
+        console.log('Like video : ' + r);
+        return likeComment();
+      })
+      .then(r => {
+        console.log('Like comment :' + r);
         resolve(r)
       })
       .catch(e => {
@@ -864,6 +991,27 @@ async function commentVideo(url) {
       return waitLoaded();
     })
 }
+
+async function likeComment() {
+  return new Promise((resolve, reject) => {
+    scrollTabY(700)
+      .then(r => {
+        return waitLoaded()
+      })
+      .then(r => {
+        wait(5000)
+        return sendMessage({
+          action: 'like_comment'
+        })
+      })
+      .then(r => {
+        resolve(r)
+      })
+      .catch(e => {
+        reject(e);
+      })
+  })
+}
 // ========================================================================= MAIN FUNCTION ====================================================================
 function main() {
   console.log('======================== START ==========================');
@@ -876,7 +1024,7 @@ function main() {
   //   })
   //   .catch(err => console.error('final', err))
   console.log('Turn ON dcom (flag = false)');
-  
+
   dcom(false)
     .then(r => {
       console.log('Turn ON dcom (flag = true)');

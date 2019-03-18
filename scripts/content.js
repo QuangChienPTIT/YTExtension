@@ -16,6 +16,10 @@ function get_status_load() {
   return document.readyState;
 }
 
+function random(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 
 
 // ============================================= CHECK STATUS =============================================
@@ -40,9 +44,11 @@ function check_Count_Channel() {
 }
 
 function is_send_phone() {
-  var btn = $('.submit-buttons #next-button');
-  if (btn.length!=0) return true;
-  // if ('html:contains("Verify your account")') return true;
+  // var btn = $('.submit-buttons #next-button');
+  // if (btn.length!=0) return true;
+  var input = $('.i18n_phone_number_input-input input#signupidvinput');
+  if(input) return true;
+  // if ($('html:contains("trước khi bạn có thể bắt đầu sử dụng tài khoản đó")').length) return true;
   return false;
 }
 
@@ -90,6 +96,16 @@ function click_channel(channelID) {
 
   return false;
 
+}
+
+function like_comment(){
+  var btn = document.querySelectorAll('#like-button');
+  var index = btn.length-random(btn.length,btn.length-5);  
+  if(btn) {
+    btn[index].click();
+    return index;
+  }
+  return false;
 }
 // ============================================= HANDLE=============================================
 
@@ -195,6 +211,10 @@ chrome.runtime.onMessage.addListener(
     }
     if (request.action == 'scroll_tab') {
       var res = scroll_tab(request.data.positionY);
+      sendResponse(res);
+    }
+    if (request.action == 'like_comment') {      
+      var res = like_comment();
       sendResponse(res);
     }
 
