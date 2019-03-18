@@ -994,7 +994,7 @@ async function commentVideo(url) {
 
 async function likeComment() {
   return new Promise((resolve, reject) => {
-    scrollTabY(700)
+    scrollTabY(5000)
       .then(r => {
         return waitLoaded()
       })
