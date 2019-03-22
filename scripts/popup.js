@@ -872,7 +872,7 @@ async function vote(){
     })
     .then(r=>{
       console.log('Load URL vote : '+r);
-      wait(random(20000,30000));
+      wait(random(5000,10000));
       return sendMessage({
         action:'click_button',
         data:{
