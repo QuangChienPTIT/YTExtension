@@ -864,7 +864,11 @@ async function reactOneChannel(channelID) {
 
 async function vote(){
   return new Promise((resolve,reject)=>{
-    resetDcom()
+    clearBrowsingData()
+    .then(r=>{
+      console.log('Clear Browsing : '+r);      
+      return resetDcom();
+    })
     .then(r=>{
       console.log('Reset Dcom : '+r);
       wait(5000);
