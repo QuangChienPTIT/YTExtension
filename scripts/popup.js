@@ -34,11 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     react();
   });
   $(document).on('click', "#btnTest", function () {
-    // commentVideo("https://www.youtube.com/watch?v=mZ28AaBwkjQ");
-    likeComment()
-      .then(r => {
-        console.log(r);
-      });
+    voteCount();
   });
   $(document).on('click', "#btnSubcribe", function () {
     var urlSubcribe = document.getElementById('urlSubcribe').value;
@@ -866,6 +862,48 @@ async function reactOneChannel(channelID) {
   })
 }
 
+async function vote(){
+  return new Promise((resolve,reject)=>{
+    resetDcom()
+    .then(r=>{
+      console.log('Reset Dcom : '+r);
+      wait(5000);
+      return updateUrl('http://cdn.popcast.cn/hkamf/vote/vote.php');
+    })
+    .then(r=>{
+      console.log('Load URL vote : '+r);
+      wait(random(20000,30000));
+      return sendMessage({
+        action:'click_button',
+        data:{
+          selector:'body > div > div.vote-wrapper > div > div > div:nth-child(9) > a'
+        }
+      })
+    })
+    .then(r=>{
+      console.log("click vote : "+r);
+      return waitLoaded();      
+    })
+    .then(r=>{
+      console.log('Vote compltete : '+r);      
+      resolve(r)
+    })
+    .catch(e=>{
+      reject(e);
+    })
+  })
+}
+
+async function voteCount(){
+  var voteCount = document.getElementById('votecount').value;
+    for(var i = 0;i<voteCount;i++){
+      await vote();
+    }
+    console.log('VOTE ALL COMPLTETE');
+    
+}
+
+
 
 
 // ========================================================================= AJAX FUNCTION ====================================================================
@@ -1045,6 +1083,4 @@ function main() {
       console.log(e)
       console.log('Stop create');
     })
-
-
 }
