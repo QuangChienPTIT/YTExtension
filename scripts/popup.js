@@ -920,9 +920,19 @@ async function reactSubOneChannel(channelID) {
         return waitLoaded();
       })
       .then(r => {
+        wait(random(5000, 10000));
+        updateUrl(URLYOUTUBE.HOMEPAGE)
+      })
+      .then(r => {
+        console.log("Load Homepage : " + r);
+        return waitLoaded();
+      })
+      .then(r => {
+        wait(random(5000, 10000));
         updateUrl('https://www.youtube.com/feed/channels')
       })
       .then(r => {
+        wait(random(5000, 6000));
         return waitLoaded();
       })
       .then(r => {
