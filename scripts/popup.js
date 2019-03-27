@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     react();
   });
   $(document).on('click', "#btnTest", function () {
-    voteCount();
+    reactSub();
   });
   $(document).on('click', "#btnSubcribe", function () {
     var urlSubcribe = document.getElementById('urlSubcribe').value;
@@ -324,6 +324,18 @@ async function getChannelCount() {
       })
   })
 }
+async function getSubChannelCount() {
+  return new Promise((resolve, reject) => {
+    sendMessage({
+        action: 'check_Sub_Count_Channel'
+      })
+      .then(r => {
+        resolve(r);
+      })
+  })
+}
+
+
 
 async function checkCreateChannel() {
   return new Promise((resolve, reject) => {
@@ -364,7 +376,7 @@ async function resetDcom() {
     console.log('Turn OFF dcom (flag = false)');
     dcom(false)
       .then(r => {
-        console.log('Turn ON dcom (flag = false)');
+        console.log('Turn ON dcom (flag = true)');
         return dcom(true);
       })
       .then(r => {
@@ -862,49 +874,179 @@ async function reactOneChannel(channelID) {
   })
 }
 
-async function vote(){
-  return new Promise((resolve,reject)=>{
-    clearBrowsingData()
-    .then(r=>{
-      console.log('Clear Browsing : '+r);      
-      return resetDcom();
-    })
-    .then(r=>{
-      console.log('Reset Dcom : '+r);
-      wait(5000);
-      return updateUrl('http://cdn.popcast.cn/hkamf/vote/vote.php');
-    })
-    .then(r=>{
-      console.log('Load URL vote : '+r);
-      wait(random(5000,10000));
-      return sendMessage({
-        action:'click_button',
-        data:{
-          selector:'body > div > div.vote-wrapper > div > div > div:nth-child(9) > a'
-        }
+async function reactSub() {
+  return new Promise((resolve, reject) => {
+    updateUrl(URLYOUTUBE.ALLCHANNEL)
+      .then(r => {
+        return waitLoaded()
       })
-    })
-    .then(r=>{
-      console.log("click vote : "+r);
-      return waitLoaded();      
-    })
-    .then(r=>{
-      console.log('Vote compltete : '+r);      
-      resolve(r)
-    })
-    .catch(e=>{
-      reject(e);
-    })
+      .then(r => {
+        return getChannelCount();
+      })
+      .then(
+        async function (r) {
+          for (var i = 1; i < r; i++) {
+            await reactSubOneChannel(i)
+          }
+          console.log('================React sub all channel=============');
+        }
+      )
   })
 }
 
-async function voteCount(){
+
+async function reactSubOneChannel(channelID) {
+  return new Promise((resolve, reject) => {
+    resetDcom()
+      .then(r => {
+        return updateUrl(URLYOUTUBE.ALLCHANNEL)
+      })
+      .then(r => {
+        wait(random(5000, 10000));
+        return waitLoaded();
+      })
+      .then(r => {
+        console.log('Load all channel');
+        wait(random(5000, 10000));
+        return sendMessage({
+          action: 'click_channel',
+          data: {
+            channelID: channelID
+          }
+        })
+      })
+      .then(r => {
+        console.log("CLick channel : " + r);
+        return waitLoaded();
+      })
+      .then(r => {
+        updateUrl('https://www.youtube.com/feed/channels')
+      })
+      .then(r => {
+        return waitLoaded();
+      })
+      .then(r => {
+        return getSubChannelCount();
+      })
+      .then(
+        async function (r) {
+          console.log('Chanel sub count : ' + r)
+          for (var i = 0; i < r; i++) {
+            await reactSubChannel(i);
+          }
+          console.log('====React sub for one channel complete===== ')
+        }
+      )
+      .then(r=>{
+        resolve(r);
+      })
+      .catch(e=>{
+        reject(e);
+      })
+  })
+}
+async function reactSubChannel(channelID) {
+  return new Promise((resolve, reject) => {
+    sendMessage({
+        action: 'click_channel_sub',
+        data: {
+          channelID: channelID
+        }
+      })
+      .then(r => {
+        wait(random(3000,5000))
+        console.log('Click channel sub:' + r);
+        return waitLoaded();
+      })
+      .then(r => {
+        wait(random(3000,5000))
+        sendMessage({
+          action: 'click_video_random'
+        })
+      })
+      .then(r => {
+        console.log('Click to video ' + r);
+        return waitLoaded();
+      })
+      .then(r => {
+        wait(random(3000,5000))
+        return reactVideo();
+      })
+      .then(r => {
+        resolve(r);
+      })
+      .catch(e => {
+        reject(e);
+      })
+  })
+}
+
+async function reactVideo() {
+  return new Promise((resolve, reject) => {
+    sendMessage({
+        action: 'click_button',
+        data: {
+          selector: '.style-scope.ytd-menu-renderer.force-icon-button.style-text'
+        }
+      })
+      .then(r => {
+        console.log('Like video : ' + r);
+        return likeComment();
+      })
+      .then(r => {
+        resolve('React video ' + r)
+      })
+      .catch(e => {
+        reject('react video failed ' + e)
+      })
+
+  })
+}
+
+
+async function vote() {
+  return new Promise((resolve, reject) => {
+    clearBrowsingData()
+      .then(r => {
+        console.log('Clear Browsing : ' + r);
+        return resetDcom();
+      })
+      .then(r => {
+        console.log('Reset Dcom : ' + r);
+        wait(5000);
+        return updateUrl('http://cdn.popcast.cn/hkamf/vote/vote.php');
+      })
+      .then(r => {
+        console.log('Load URL vote : ' + r);
+        wait(random(5000, 10000));
+        return sendMessage({
+          action: 'click_button',
+          data: {
+            selector: 'body > div > div.vote-wrapper > div > div > div:nth-child(9) > a'
+          }
+        })
+      })
+      .then(r => {
+        console.log("click vote : " + r);
+        return waitLoaded();
+      })
+      .then(r => {
+        console.log('Vote compltete : ' + r);
+        resolve(r)
+      })
+      .catch(e => {
+        reject(e);
+      })
+  })
+}
+
+async function voteCount() {
   var voteCount = document.getElementById('votecount').value;
-    for(var i = 0;i<voteCount;i++){
-      await vote();
-    }
-    console.log('VOTE ALL COMPLTETE');
-    
+  for (var i = 0; i < voteCount; i++) {
+    await vote();
+  }
+  console.log('VOTE ALL COMPLTETE');
+
 }
 
 
@@ -1038,6 +1180,7 @@ async function likeComment() {
   return new Promise((resolve, reject) => {
     scrollTabY(5000)
       .then(r => {
+        wait(10000);
         return waitLoaded()
       })
       .then(r => {

@@ -43,6 +43,12 @@ function check_Count_Channel() {
   return count;
 }
 
+function check_Sub_Count_Channel(){
+  var countChannel = document.querySelectorAll('a.yt-simple-endpoint.style-scope.ytd-channel-renderer')
+  var count  = countChannel.length;
+  return count;
+}
+
 function is_send_phone() {
   // var btn = $('.submit-buttons #next-button');
   // if (btn.length!=0) return true;
@@ -93,9 +99,17 @@ function click_channel(channelID) {
     channel[channelID].click();
     return true;
   };
-
   return false;
-
+}
+function click_channel_sub(channelID) {
+  console.log(channelID);
+  
+  var channel = document.querySelectorAll('a.yt-simple-endpoint.style-scope.ytd-channel-renderer');
+  if (channel[channelID]) {
+    channel[channelID].click();
+    return true;
+  };
+  return false;
 }
 
 function like_comment(){
@@ -104,6 +118,17 @@ function like_comment(){
   if(btn) {
     btn[index].click();
     return index;
+  }
+  return false;
+}
+
+function click_video_random(){
+  var video = document.querySelectorAll('#thumbnail')
+  if(video){
+    var id = random(0,video.length-1)
+    console.log('idVideo : '+id);    
+    video[id].click();
+    return id;
   }
   return false;
 }
@@ -217,5 +242,18 @@ chrome.runtime.onMessage.addListener(
       var res = like_comment();
       sendResponse(res);
     }
+    if (request.action == 'check_Sub_Count_Channel') {      
+      var res = check_Sub_Count_Channel();
+      sendResponse(res);
+    }
+    if (request.action == 'click_channel_sub') {        
+      var res = click_channel_sub(request.data.channelID);
+      sendResponse(res);
+    }
 
+    if(request.action =='click_video_random'){
+      var res = click_video_random();
+      sendResponse(res);
+    }
+    
   });
