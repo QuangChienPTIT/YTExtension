@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
   $(document).on('click', "#btnReact", function () {
     react();
   });
-  $(document).on('click', "#btnTest", function () {
+  $(document).on('click', "#btnReactSub", function () {
     reactSub();
   });
   $(document).on('click', "#btnSubcribe", function () {
