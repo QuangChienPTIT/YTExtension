@@ -1287,7 +1287,7 @@ async function oneLinkcollider(oneContent) {
         return waitLoaded()
       })
       .then(r => {
-        wait(3300000)
+        wait(3000000)
         return updateUrl('https://www.linkcollider.com/page/logout')
       })
       .then(r => {
