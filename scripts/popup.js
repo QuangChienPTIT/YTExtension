@@ -1280,14 +1280,12 @@ async function oneLinkcollider(oneContent) {
         wait(5000);
         return waitLoaded();
       })
-      .then(r => {
-        return updateUrl('http://www.linkcollider.com/page/activity/autosurf')
+      .then(async function (r) {
+        for (var i = 0; i < 10; i++) {
+          await linkcollider5min()
+        }
       })
       .then(r => {
-        return waitLoaded()
-      })
-      .then(r => {
-        wait(3000000)
         return updateUrl('https://www.linkcollider.com/page/logout')
       })
       .then(r => {
@@ -1300,6 +1298,23 @@ async function oneLinkcollider(oneContent) {
       .catch(e => {
         reject(e)
       })
+  })
+}
+
+async function linkcollider5min(){
+  return new Promise((resolve,reject)=>{
+    console.log("Load url autosurf");    
+    updateUrl('http://www.linkcollider.com/page/activity/autosurf')
+    .then(r=>{
+      return waitLoaded();
+    })
+    .then(r=>{
+      wait(300000);
+      resolve(r)
+    })
+    .catch(e=>{
+      reject(e);
+    })
   })
 }
 
