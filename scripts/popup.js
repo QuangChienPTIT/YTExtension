@@ -1207,7 +1207,7 @@ async function reactOneGoogleAcc(id){
       return waitLoaded();
     })
     .then(r=>{
-      wait(1800000);
+      wait(3300000);
       resolve(r)
     })
     .catch(e=>{
