@@ -14,32 +14,42 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Subcribe youtube auto</h5>
-                    <div class="form-group">
-                        <input id="myEmail" class="form-control" type="text" placeholder="Email" value="">
-                    </div>
-                    <div class="form-group">
-                        <input id="password" class="form-control" type="text" placeholder="pass" value="">
-                    </div>     
-                    <div class="form-group">
-                        <input id="urlSubcribe" class="form-control" type="text" placeholder="URL" value="https://www.youtube.com/watch?v=3CAH4cDrjeQ">
-                    </div>
-                    <div class="form-group">
-                        <input id="votecount" class="form-control" type="text" placeholder="Số lượng vote" value="10">
-                    </div>            
-                    <div class="form-group">
-                        <select class="form-control form-control-sm" id="selectCountChannel">
-                            <option value="10">10 Channel Create</option>
-                            <option value="20">20 Channel Create</option>
-                            <option value="30">30 Channel Create</option>
-                            <option value="40">40 Channel Create</option>
-                          </select>
-                    </div>        
-                    <button class="btn btn-success" id="btnLogin">Login</button>
-                    <button class="btn btn-success" id="btnCreate">Create</button>
-                    <button class="btn btn-danger" id="btnClear">Clear</button>
-                    <button class="btn btn-danger" id="btnReact">React</button>
-                    <button class="btn btn-danger" id="btnReactSub">ReactSub</button>
-                    <button class="btn btn-danger" id="btnSubcribe">Subcribe</button>
+                <!-- <div class="form-group">
+                    <select class="form-control form-control-sm" id="selectFunc">
+                        <option value="subcribe">Subcribe</option>
+                        <option value="create">Create Channel</option>
+                        <option value="react">React</option>
+                        <option value="reactsub">React with channel Subcribed</option>
+                        <option value="clear">Clear Browsing</option>                        
+                    </select>
+                </div> -->
+                <div class="form-group">
+                    <textarea id="searchText" class="form-control" type="text" placeholder="Search Text" value=""></textarea>
+                </div>
+                <div class="form-group">
+                    <textarea id="urlSubcribe" class="form-control" type="text" placeholder="URL" value=""></textarea>
+                </div>
+                <button class="btn btn-danger" id="btnSubcribe">Subcribe</button>
+
+                <div class="form-group">
+                    <input id="votecount" class="form-control" type="text" placeholder="Số lượng vote" value="10">
+                </div>
+                <div class="form-group">
+                    <select class="form-control form-control-sm" id="selectCountChannel">
+                        <option value="10">10 Channel Create</option>
+                        <option value="20">20 Channel Create</option>
+                        <option value="30">30 Channel Create</option>
+                        <option value="40">40 Channel Create</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-success" id="btnCreate">Create</button>
+                <button class="btn btn-danger" id="btnClear">Clear</button>
+                <button class="btn btn-danger" id="btnReact">React</button>
+                <button class="btn btn-danger" id="btnReactSub">ReactSub</button>
+                <button class="btn btn-danger" id="btnTest">Test</button>
+                <button class="btn btn-danger" id="btnFunc1">Function 1</button>
+
             </div>
         </div>
 

@@ -1,9 +1,27 @@
 document.addEventListener('DOMContentLoaded', function () {
+  var selectFunc = document.getElementById('selectFunc');
+  $('#btnTest').click(function (e) {
+    e.preventDefault();  
+    keydo
+    test();    
+  });
+  $('#selectFunc').change(function (e) {
+    e.preventDefault();
+    console.log(selectFunc.options[selectFunc.selectedIndex].value);
+
+    switch (selectFunc) {
+      case 'subcribe':
+        console.log('subcribe');
+        break;
+      case 'create':
+        console.log('create');
+        break;
+    }
+  });
 
   $(document).on('click', "#btnCreate", function () {
-    // main();
     var countChannel = document.getElementById('selectCountChannel').value;
-    createManyChannel(countChannel);
+    createManyChannel(10);
   });
   $(document).on('click', "#btnClear", function () {
     clearBrowsingData();
@@ -26,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function () {
       })
       .catch(e => {
         console.log(e);
-
       });
   });
 
@@ -38,15 +55,19 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   $(document).on('click', "#btnSubcribe", function () {
     var urlSubcribe = document.getElementById('urlSubcribe').value;
-    console.log(urlSubcribe);
-    subcribeAllChannel(urlSubcribe)
+
+    arrURL = urlSubcribe.split("\n")
+    subcribeAllLink(arrURL)
       .then(r => {
         console.log('Subcribe complete : ' + r);
-
       });
 
   });
 }, false);
+$('#btnFunc1').click(function (e) { 
+  e.preventDefault();
+  change_GoogleAcc_React();
+});
 
 
 //========================================================================== INIT CONST VALUE ========================================================
@@ -351,7 +372,49 @@ async function checkCreateChannel() {
   })
 }
 
+async function checkSubcribeCount(subCount) {
+
+}
+
 // ========================================================================= ASYNC FUNCTION ====================================================================
+
+async function test() {
+  return new Promise((resolve, reject) => {
+    sendMessage({
+        action: 'click_button',
+        data: {
+          selector: '.style-scope.ytd-menu-renderer.force-icon-button.style-default.size-default'
+        }
+      })
+      .then(r => {
+        return waitLoaded()
+      })
+      .then(r => {
+        return sendMessage({
+          action: 'click_button',
+          data: {
+            selector: ".style-scope.ytd-share-target-renderer[title^='Blogger']"
+          }
+        })
+      })      
+      .then(r => {        
+        wait(5000);
+        return sendMessageToOther({
+          action: 'click_button',
+          data: {
+            selector: '#submitButtons'
+          },
+          id: 1
+        })
+      })
+      .then(r => {
+        resolve(r);
+      })
+      .catch(e => {
+        reject(e);
+      })
+  })
+}
 
 function sendMessage(data) {
   return new Promise((resolve, reject) => {
@@ -361,6 +424,24 @@ function sendMessage(data) {
         currentWindow: true
       }, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {
+          action: data.action,
+          data: data.data
+        }, function (response) {
+          resolve(response);
+        });
+      });
+    });
+  })
+}
+
+function sendMessageToOther(data) {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.query({}, function (tabs) {
+      chrome.tabs.query({
+        active: true,
+        currentWindow: true
+      }, function (tabs) {
+        chrome.tabs.sendMessage(tabs[data.id].id, {
           action: data.action,
           data: data.data
         }, function (response) {
@@ -509,7 +590,7 @@ async function waitLoaded() {
       return true;
     });
 }
-
+/////////////////////////LOGIN//////////////////////////////////////////
 async function login(email, pass) {
   return new Promise((resolve, reject) => {
     clearBrowsingData()
@@ -585,7 +666,7 @@ async function login(email, pass) {
       })
   })
 }
-
+/////////////////////////CREATE//////////////////////////////////////////
 async function createChannel() {
   return new Promise((resolve, reject) => {
     console.log('Turn ON dcom (flag = false)');
@@ -676,10 +757,14 @@ async function createManyChannel(countChannel) {
       })
   }
 }
-
+/////////////////////////SUBCRIBE//////////////////////////////////////////
 async function subcribe(urlSubcribe) {
   return new Promise((resolve, reject) => {
-    updateUrl(urlSubcribe)
+    var searchText = document.getElementById('searchText').value;
+    searchByText(searchText)
+      .then(r => {
+        updateUrl(urlSubcribe)
+      })
       .then(results => {
         return waitLoaded()
       })
@@ -698,7 +783,7 @@ async function subcribe(urlSubcribe) {
               console.log('CLick button like video : ' + results);
             })
         }
-        wait(random(2000, 5000));
+        wait(random(20000, 30000));
         return sendMessage({
           action: 'click_button',
           data: {
@@ -766,7 +851,9 @@ async function subcribeAllChannel(urlSubcribe) {
       })
       .then(
         async function (r) {
-          for (var i = 1; i < r; i++) {
+          console.log("Số lượng channel : " + r);
+
+          for (var i = 0; i <= r; i++) {
             await subcribeOneChannel(i, urlSubcribe);
           }
           console.log('================Subcribe all channel=============');
@@ -776,6 +863,24 @@ async function subcribeAllChannel(urlSubcribe) {
   })
 }
 
+async function subcribeAllLink(arrSub) {
+  return new Promise((resolve, reject) => {
+      var loop = async function () {
+        for (var i = 0; i < arrSub.length; i++) {
+          var textSub = arrSub[i].split(" ");
+          await subcribeAllChannel(textSub[0])
+        }
+      }
+      loop();
+    })
+    .then(r => {
+      resolve(r)
+    })
+    .catch(e => {
+      reject(e);
+    })
+}
+/////////////////////////REACT//////////////////////////////////////////
 async function react() {
   return new Promise((resolve, reject) => {
     updateUrl(URLYOUTUBE.ALLCHANNEL)
@@ -873,7 +978,7 @@ async function reactOneChannel(channelID) {
       })
   })
 }
-
+/////////////////////////REACTSUB//////////////////////////////////////////
 async function reactSub() {
   return new Promise((resolve, reject) => {
     updateUrl(URLYOUTUBE.ALLCHANNEL)
@@ -907,7 +1012,6 @@ async function reactSubOneChannel(channelID) {
       })
       .then(r => {
         console.log('Load all channel');
-        wait(random(5000, 10000));
         return sendMessage({
           action: 'click_channel',
           data: {
@@ -947,10 +1051,10 @@ async function reactSubOneChannel(channelID) {
           console.log('====React sub for one channel complete===== ')
         }
       )
-      .then(r=>{
+      .then(r => {
         resolve(r);
       })
-      .catch(e=>{
+      .catch(e => {
         reject(e);
       })
   })
@@ -964,12 +1068,12 @@ async function reactSubChannel(channelID) {
         }
       })
       .then(r => {
-        wait(random(3000,5000))
+        wait(random(3000, 5000))
         console.log('Click channel sub:' + r);
         return waitLoaded();
       })
       .then(r => {
-        wait(random(3000,5000))
+        wait(random(3000, 5000))
         sendMessage({
           action: 'click_video_random'
         })
@@ -979,7 +1083,7 @@ async function reactSubChannel(channelID) {
         return waitLoaded();
       })
       .then(r => {
-        wait(random(3000,5000))
+        wait(random(3000, 5000))
         return reactVideo();
       })
       .then(r => {
@@ -1014,34 +1118,31 @@ async function reactVideo() {
 }
 
 
-async function vote() {
+async function searchByText(searchText) {
   return new Promise((resolve, reject) => {
-    clearBrowsingData()
+    updateUrl(URLYOUTUBE.HOMEPAGE)
       .then(r => {
-        console.log('Clear Browsing : ' + r);
-        return resetDcom();
-      })
-      .then(r => {
-        console.log('Reset Dcom : ' + r);
-        wait(5000);
-        return updateUrl('http://cdn.popcast.cn/hkamf/vote/vote.php');
-      })
-      .then(r => {
-        console.log('Load URL vote : ' + r);
-        wait(random(5000, 10000));
+        waitLoaded();
         return sendMessage({
-          action: 'click_button',
+          action: 'fill_form',
           data: {
-            selector: 'body > div > div.vote-wrapper > div > div > div:nth-child(9) > a'
+            selector: 'input#search',
+            value: searchText
           }
         })
       })
       .then(r => {
-        console.log("click vote : " + r);
-        return waitLoaded();
+        console.log('Fill Form ' + r);
+        wait(random(2000, 3000));
+        return sendMessage({
+          action: 'click_button',
+          data: {
+            selector: 'button#search-icon-legacy'
+          }
+        })
       })
       .then(r => {
-        console.log('Vote compltete : ' + r);
+        console.log('Click search : ' + r);
         resolve(r)
       })
       .catch(e => {
@@ -1050,15 +1151,70 @@ async function vote() {
   })
 }
 
-async function voteCount() {
-  var voteCount = document.getElementById('votecount').value;
-  for (var i = 0; i < voteCount; i++) {
-    await vote();
-  }
-  console.log('VOTE ALL COMPLTETE');
-
+async function change_GoogleAcc_React(){
+  return new Promise((resolve,reject)=>{
+    updateUrl('https://accounts.google.com/SignOutOptions?hl=vi&continue=https://www.google.com/')
+    .then(r=>{
+      return waitLoaded();
+    })
+    .then(r=>{
+      return sendMessage({
+        action: 'get_count_of_element',
+        data: {
+          selector: 'button'
+        }
+      })
+    })
+    .then(async function (r) {
+      for (var i = 0; i < r-3; i++) {
+        await reactOneGoogleAcc(i)
+      }
+      console.log('================React all google Account=============');
+      resolve(r);
+    })
+    .catch(e=>{
+      reject(e)
+    })
+  })
 }
 
+async function reactOneGoogleAcc(id){
+  return new Promise((resolve,reject)=>{
+    resetDcom()
+    .then(r=>{
+      return updateUrl('https://accounts.google.com/SignOutOptions?hl=vi&continue=https://www.google.com/')
+    })
+    .then(r=>{
+      return waitLoaded();
+    })
+    .then(r=>{
+      return sendMessage({
+        action:'click_button',
+        data:{
+          selector:'#choose-account-'+id
+        }
+      })
+    })    
+    .then(r=>{
+      console.log('Click choose google account '+r);
+      wait(2000);
+      return waitLoaded()
+    })
+    .then(r=>{      
+      return updateUrl('http://www.linkcollider.com/page/activity/autosurf');
+    })
+    .then(r=>{
+      return waitLoaded();
+    })
+    .then(r=>{
+      wait(1800000);
+      resolve(r)
+    })
+    .catch(e=>{
+      reject(e);
+    })
+  })
+}
 
 
 

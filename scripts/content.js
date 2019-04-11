@@ -58,6 +58,11 @@ function is_send_phone() {
   return false;
 }
 
+function get_count_of_element(data){
+  var ele = document.querySelectorAll(data.selector);
+  return ele.length;
+}
+
 
 // ============================================= CLICK =============================================
 
@@ -132,6 +137,10 @@ function click_video_random(){
   }
   return false;
 }
+
+function ctrl_click(data){
+  var btn = document.getElementById(data.selector).dispatchEvent(new MouseEvent("click",{ctrlKey:true}))
+}
 // ============================================= HANDLE=============================================
 
 function scroll_tab(positionY){
@@ -171,6 +180,7 @@ function fill_form(data) {
   }
   return false;
 }
+
 
 function fill_comment_video(content) {
   var a =document.getElementById('placeholder-area')
@@ -253,6 +263,12 @@ chrome.runtime.onMessage.addListener(
 
     if(request.action =='click_video_random'){
       var res = click_video_random();
+      sendResponse(res);
+    }
+    if(request.action =='get_count_of_element'){
+      console.log(request.data);
+      
+      var res = get_count_of_element(request.data);
       sendResponse(res);
     }
     
