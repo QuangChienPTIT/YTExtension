@@ -181,6 +181,15 @@ function fill_form(data) {
   return false;
 }
 
+function fill_input(data){
+  var input = $(data.selector);
+  if(input){
+    input.val(data.value);
+    return true;
+  }
+  return false;
+}
+
 
 function fill_comment_video(content) {
   var a =document.getElementById('placeholder-area')
@@ -226,6 +235,10 @@ chrome.runtime.onMessage.addListener(
     }
     if (request.action == 'fill_form') {
       var res = fill_form(request.data)
+      sendResponse(res)
+    }
+    if (request.action == 'fill_input') {
+      var res = fill_input(request.data)
       sendResponse(res)
     }
     if (request.action == 'check_Count_Channel') {

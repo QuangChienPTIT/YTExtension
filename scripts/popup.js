@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
   var selectFunc = document.getElementById('selectFunc');
   $('#btnTest').click(function (e) {
-    e.preventDefault();  
+    e.preventDefault();
     keydo
-    test();    
+    test();
   });
   $('#selectFunc').change(function (e) {
     e.preventDefault();
@@ -64,9 +64,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   });
 }, false);
-$('#btnFunc1').click(function (e) { 
+$('#btnFunc1').click(function (e) {
   e.preventDefault();
-  change_GoogleAcc_React();
+  linkcollider();
 });
 
 
@@ -173,14 +173,14 @@ function wait(ms) {
 
 async function asyncWait(ms) {
   return new Promise((resolve, reject) => {
-      var start = new Date().getTime();
-      var end = start;
-      while (end < start + ms) {
-        end = new Date().getTime();
-      }
-      if (end >= start + ms)
-        resolve(true);
-    })
+    var start = new Date().getTime();
+    var end = start;
+    while (end < start + ms) {
+      end = new Date().getTime();
+    }
+    if (end >= start + ms)
+      resolve(true);
+  })
     .then(results => {
       return results;
     });
@@ -324,8 +324,8 @@ function get_link_restserver(username, password) {
 async function checkCountChannel() {
   return new Promise((resolve, reject) => {
     sendMessage({
-        action: 'check_Count_Channel'
-      })
+      action: 'check_Count_Channel'
+    })
       .then(r => {
         if (r < 100)
           resolve(r)
@@ -338,8 +338,8 @@ async function checkCountChannel() {
 async function getChannelCount() {
   return new Promise((resolve, reject) => {
     sendMessage({
-        action: 'check_Count_Channel'
-      })
+      action: 'check_Count_Channel'
+    })
       .then(r => {
         resolve(r);
       })
@@ -348,8 +348,8 @@ async function getChannelCount() {
 async function getSubChannelCount() {
   return new Promise((resolve, reject) => {
     sendMessage({
-        action: 'check_Sub_Count_Channel'
-      })
+      action: 'check_Sub_Count_Channel'
+    })
       .then(r => {
         resolve(r);
       })
@@ -361,8 +361,8 @@ async function getSubChannelCount() {
 async function checkCreateChannel() {
   return new Promise((resolve, reject) => {
     sendMessage({
-        action: 'is_send_phone'
-      })
+      action: 'is_send_phone'
+    })
       .then(r => {
         console.log(r);
 
@@ -381,11 +381,11 @@ async function checkSubcribeCount(subCount) {
 async function test() {
   return new Promise((resolve, reject) => {
     sendMessage({
-        action: 'click_button',
-        data: {
-          selector: '.style-scope.ytd-menu-renderer.force-icon-button.style-default.size-default'
-        }
-      })
+      action: 'click_button',
+      data: {
+        selector: '.style-scope.ytd-menu-renderer.force-icon-button.style-default.size-default'
+      }
+    })
       .then(r => {
         return waitLoaded()
       })
@@ -396,8 +396,8 @@ async function test() {
             selector: ".style-scope.ytd-share-target-renderer[title^='Blogger']"
           }
         })
-      })      
-      .then(r => {        
+      })
+      .then(r => {
         wait(5000);
         return sendMessageToOther({
           action: 'click_button',
@@ -520,9 +520,9 @@ async function getCookies() {
 async function getTokenSuccess(username, password) {
   var link = get_link_restserver(username, password);
   return new Promise((resolve, reject) => {
-      var token = get_token(link);
-      resolve(token);
-    })
+    var token = get_token(link);
+    resolve(token);
+  })
     .then(results => {
       return results;
     });
@@ -537,21 +537,21 @@ async function clearBrowsingData() {
         "extension": true
       }
     }, {
-      "appcache": true,
-      "cache": true,
-      "cookies": true,
-      "downloads": true,
-      "fileSystems": true,
-      "formData": true,
-      "history": true,
-      "indexedDB": true,
-      "localStorage": true,
-      "pluginData": true,
-      "passwords": true,
-      "webSQL": true
-    }, function () {
-      resolve(true);
-    });
+        "appcache": true,
+        "cache": true,
+        "cookies": true,
+        "downloads": true,
+        "fileSystems": true,
+        "formData": true,
+        "history": true,
+        "indexedDB": true,
+        "localStorage": true,
+        "pluginData": true,
+        "passwords": true,
+        "webSQL": true
+      }, function () {
+        resolve(true);
+      });
   });
 }
 
@@ -574,17 +574,17 @@ async function clearBrowsingData() {
 // }
 async function waitLoaded() {
   return new Promise((resolve, reject) => {
-      var interval = setInterval(function () {
-        sendMessage({
-            action: "get_status_load"
-          })
-          .then(function (results) {
-            console.log(results);
-            if (results === 'complete')
-              resolve(interval);
-          })
-      }, 1000);
-    })
+    var interval = setInterval(function () {
+      sendMessage({
+        action: "get_status_load"
+      })
+        .then(function (results) {
+          console.log(results);
+          if (results === 'complete')
+            resolve(interval);
+        })
+    }, 1000);
+  })
     .then(results => {
       clearInterval(results);
       return true;
@@ -761,7 +761,9 @@ async function createManyChannel(countChannel) {
 async function subcribe(urlSubcribe) {
   return new Promise((resolve, reject) => {
     var searchText = document.getElementById('searchText').value;
-    searchByText(searchText)
+    var text = searchText.split("\n");
+    var txt = text[random(0, text.length - 1)]
+    searchByText(txt)
       .then(r => {
         updateUrl(urlSubcribe)
       })
@@ -774,11 +776,11 @@ async function subcribe(urlSubcribe) {
         if (r % 3 == 0) {
           wait(random(2000, 5000));
           sendMessage({
-              action: 'click_button',
-              data: {
-                selector: '.style-scope.ytd-menu-renderer.force-icon-button.style-text'
-              }
-            })
+            action: 'click_button',
+            data: {
+              selector: '.style-scope.ytd-menu-renderer.force-icon-button.style-text'
+            }
+          })
             .then(results => {
               console.log('CLick button like video : ' + results);
             })
@@ -865,14 +867,14 @@ async function subcribeAllChannel(urlSubcribe) {
 
 async function subcribeAllLink(arrSub) {
   return new Promise((resolve, reject) => {
-      var loop = async function () {
-        for (var i = 0; i < arrSub.length; i++) {
-          var textSub = arrSub[i].split(" ");
-          await subcribeAllChannel(textSub[0])
-        }
+    var loop = async function () {
+      for (var i = 0; i < arrSub.length; i++) {
+        var textSub = arrSub[i].split(" ");
+        await subcribeAllChannel(textSub[0])
       }
-      loop();
-    })
+    }
+    loop();
+  })
     .then(r => {
       resolve(r)
     })
@@ -1062,11 +1064,11 @@ async function reactSubOneChannel(channelID) {
 async function reactSubChannel(channelID) {
   return new Promise((resolve, reject) => {
     sendMessage({
-        action: 'click_channel_sub',
-        data: {
-          channelID: channelID
-        }
-      })
+      action: 'click_channel_sub',
+      data: {
+        channelID: channelID
+      }
+    })
       .then(r => {
         wait(random(3000, 5000))
         console.log('Click channel sub:' + r);
@@ -1098,11 +1100,11 @@ async function reactSubChannel(channelID) {
 async function reactVideo() {
   return new Promise((resolve, reject) => {
     sendMessage({
-        action: 'click_button',
-        data: {
-          selector: '.style-scope.ytd-menu-renderer.force-icon-button.style-text'
-        }
-      })
+      action: 'click_button',
+      data: {
+        selector: '.style-scope.ytd-menu-renderer.force-icon-button.style-text'
+      }
+    })
       .then(r => {
         console.log('Like video : ' + r);
         return likeComment();
@@ -1151,68 +1153,153 @@ async function searchByText(searchText) {
   })
 }
 
-async function change_GoogleAcc_React(){
-  return new Promise((resolve,reject)=>{
+async function change_GoogleAcc_React() {
+  return new Promise((resolve, reject) => {
     updateUrl('https://accounts.google.com/SignOutOptions?hl=vi&continue=https://www.google.com/')
-    .then(r=>{
-      return waitLoaded();
-    })
-    .then(r=>{
-      return sendMessage({
-        action: 'get_count_of_element',
-        data: {
-          selector: 'button'
-        }
+      .then(r => {
+        return waitLoaded();
       })
-    })
-    .then(async function (r) {
-      for (var i = 0; i < r-3; i++) {
-        await reactOneGoogleAcc(i)
-      }
-      console.log('================React all google Account=============');
-      resolve(r);
-    })
-    .catch(e=>{
-      reject(e)
-    })
+      .then(r => {
+        return sendMessage({
+          action: 'get_count_of_element',
+          data: {
+            selector: 'button'
+          }
+        })
+      })
+      .then(async function (r) {
+        for (var i = 0; i < r - 3; i++) {
+          await reactOneGoogleAcc(i)
+        }
+        console.log('================React all google Account=============');
+        resolve(r);
+      })
+      .catch(e => {
+        reject(e)
+      })
   })
 }
 
-async function reactOneGoogleAcc(id){
-  return new Promise((resolve,reject)=>{
+async function reactOneGoogleAcc(id) {
+  return new Promise((resolve, reject) => {
     resetDcom()
-    .then(r=>{
-      return updateUrl('https://accounts.google.com/SignOutOptions?hl=vi&continue=https://www.google.com/')
-    })
-    .then(r=>{
-      return waitLoaded();
-    })
-    .then(r=>{
-      return sendMessage({
-        action:'click_button',
-        data:{
-          selector:'#choose-account-'+id
-        }
+      .then(r => {
+        return updateUrl('https://accounts.google.com/SignOutOptions?hl=vi&continue=https://www.google.com/')
       })
-    })    
-    .then(r=>{
-      console.log('Click choose google account '+r);
-      wait(2000);
-      return waitLoaded()
-    })
-    .then(r=>{      
-      return updateUrl('http://www.linkcollider.com/page/activity/autosurf');
-    })
-    .then(r=>{
-      return waitLoaded();
-    })
-    .then(r=>{
-      wait(3300000);
-      resolve(r)
-    })
-    .catch(e=>{
-      reject(e);
-    })
+      .then(r => {
+        return waitLoaded();
+      })
+      .then(r => {
+        return sendMessage({
+          action: 'click_button',
+          data: {
+            selector: '#choose-account-' + id
+          }
+        })
+      })
+      .then(r => {
+        console.log('Click choose google account ' + r);
+        wait(2000);
+        return waitLoaded()
+      })
+      .then(r => {
+        return updateUrl('http://www.linkcollider.com/page/activity/autosurf');
+      })
+      .then(r => {
+        return waitLoaded();
+      })
+      .then(r => {
+        wait(3300000);
+        resolve(r)
+      })
+      .catch(e => {
+        reject(e);
+      })
+  })
+}
+
+async function linkcollider() {
+  return new Promise((resolve, reject) => {
+    var contentAll = document.getElementById('urlSubcribe').value;
+    var content = contentAll.split("\n");
+    updateUrl('https://www.google.com')
+      .then(async function (r) {
+        for (var i = 0; i < content.length; i++) {
+          var oneContent = content[i].split(" ");
+          await oneLinkcollider(oneContent)
+        }
+        console.log('================ALl Linkcollider=============');
+        resolve(r);
+      })
+
+
+  })
+}
+
+async function oneLinkcollider(oneContent) {
+  return new Promise((resolve, reject) => {
+    var mail = oneContent[0];
+    var pass = oneContent[1];
+    resetDcom()
+      .then(r => {
+        return updateUrl('https://www.linkcollider.com/page/login')
+      })
+      .then(r => {
+        return waitLoaded();
+      })
+      .then(r => {
+        wait(2000)
+        return sendMessage({
+          action: 'fill_input',
+          data: {
+            selector: '#email',
+            value: mail
+          }
+        })
+      })
+      .then(r => {
+        wait(2000)
+        return sendMessage({
+          action: 'fill_input',
+          data: {
+            selector: '#pw',
+            value: pass
+          }
+        })
+      })
+      .then(r => {
+        wait(2000)
+        return sendMessage({
+          action: 'click_button',
+          data: {
+            selector: '.btn-u.btn-u-lg.pull-right.rounded-4x'
+          }
+        })
+      })
+      .then(r => {
+        wait(5000);
+        return waitLoaded();
+      })
+      .then(r => {
+        return updateUrl('http://www.linkcollider.com/page/activity/autosurf')
+      })
+      .then(r => {
+        return waitLoaded()
+      })
+      .then(r => {
+        wait(3300000)
+        return updateUrl('https://www.linkcollider.com/page/logout')
+      })
+      .then(r => {
+        return waitLoaded();
+      })
+      .then(r => {
+        console.log("LINKCOLLIDER ONE ACCOUNT");
+        resolve(r)
+      })
+      .catch(e => {
+        reject(e)
+      })
   })
 }
 
@@ -1295,11 +1382,11 @@ async function dcom(flag) {
 async function scrollTabY(positionY) {
   return new Promise((resolve, reject) => {
     sendMessage({
-        action: 'scroll_tab',
-        data: {
-          positionY: positionY
-        }
-      })
+      action: 'scroll_tab',
+      data: {
+        positionY: positionY
+      }
+    })
       .then(r => {
         resolve(r)
       })
