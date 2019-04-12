@@ -785,7 +785,7 @@ async function subcribe(urlSubcribe) {
               console.log('CLick button like video : ' + results);
             })
         }
-        wait(random(20000, 30000));
+        wait(random(10000, 20000));
         return sendMessage({
           action: 'click_button',
           data: {
@@ -794,6 +794,7 @@ async function subcribe(urlSubcribe) {
         })
       })
       .then(results => {
+        wait(10000);
         console.log("CLick button subcribe video : " + results);
       })
       .then(results => {
@@ -826,7 +827,7 @@ async function subcribeOneChannel(channelID, urlSubcribe) {
         })
       })
       .then(r => {
-        console.log("CLick channel : " + r);
+        console.log("CLick channel " + channelID+" : "+r);
         return waitLoaded();
       })
       .then(r => {

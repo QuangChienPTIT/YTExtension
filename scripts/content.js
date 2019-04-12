@@ -53,7 +53,7 @@ function is_send_phone() {
   // var btn = $('.submit-buttons #next-button');
   // if (btn.length!=0) return true;
   var input = $('.i18n_phone_number_input-input input#signupidvinput');
-  if(input) return false;
+  if(input.length==1) return true;
   // if ($('html:contains("trước khi bạn có thể bắt đầu sử dụng tài khoản đó")').length) return true;
   return false;
 }
