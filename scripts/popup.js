@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var selectFunc = document.getElementById('selectFunc');
   $('#btnTest').click(function (e) {
     e.preventDefault();
-    clearBrowsingData2();
+    playVideo();
   });
   $('#selectFunc').change(function (e) {
     e.preventDefault();
@@ -782,6 +782,26 @@ async function createManyChannel(countChannel) {
   }
 }
 /////////////////////////SUBCRIBE//////////////////////////////////////////
+async function playVideo(){
+  return new Promise((resolve,reject)=>{
+    waitLoaded()
+    .then(r=>{
+      return sendMessage({
+        action:'click_button',
+        data: {
+          selector: '.ytp-cued-thumbnail-overlay'
+        }
+      })
+    })
+    .then(r=>{
+      resolve(r)
+    })
+    .catch(e=>{
+      reject(e)
+    })
+    
+  })
+}
 async function subcribe(urlSubcribe) {
   return new Promise((resolve, reject) => {
     var searchText = document.getElementById('searchText').value;
@@ -791,27 +811,11 @@ async function subcribe(urlSubcribe) {
       .then(r => {
         updateUrl(urlSubcribe)
       })
-      .then(results => {
-        return waitLoaded()
-      })
-      .then(r=>{
-        wait(5000)
-        return scrollTabY(10000)
-      })
       .then(r=>{
         return waitLoaded();
       })
       .then(r=>{
-        wait(5000)
-        return sendMessage({
-          action: 'click_button',
-          data: {
-            selector: 'a:contains("1:30")'
-          }
-        })
-      })
-      .then(r=>{
-        return waitLoaded();
+        return playVideo();
       })
       .then(results => {
         console.log("Load URL subcribe : " + results);
@@ -939,7 +943,7 @@ async function react() {
       })
       .then(
         async function (r) {
-          for (var i = 1; i < r; i++) {
+          for (var i = 0; i < r; i++) {
             await reactOneChannel(i)
           }
           console.log('================React all channel=============');
@@ -981,7 +985,7 @@ async function reactOneChannel(channelID) {
         return waitLoaded();
       })
       .then(r => {
-        wait(random(5000, 10000));
+        wait(random(20000, 30000));
         console.log('Load URL channel : ' + r);
         return sendMessage({
           action: 'click_button',
@@ -1037,7 +1041,7 @@ async function reactSub() {
       })
       .then(
         async function (r) {
-          for (var i = 1; i < r; i++) {
+          for (var i = 0; i < r; i++) {
             await reactSubOneChannel(i)
           }
           console.log('================React sub all channel=============');
@@ -1155,6 +1159,7 @@ async function reactVideo() {
         return likeComment();
       })
       .then(r => {
+        wait(random(20000,30000))
         resolve('React video ' + r)
       })
       .catch(e => {
