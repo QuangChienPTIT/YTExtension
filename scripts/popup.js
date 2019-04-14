@@ -871,6 +871,7 @@ async function subcribeOneChannel(channelID, urlSubcribe) {
       })
       .then(r => {
         console.log("CLick channel " + channelID+" : "+r);
+        wait(5000);
         return waitLoaded();
       })
       .then(r => {
@@ -899,7 +900,7 @@ async function subcribeAllChannel(urlSubcribe) {
         async function (r) {
           console.log("Số lượng channel : " + r);
 
-          for (var i = 1; i < r; i++) {
+          for (var i = 0; i < r; i++) {
             await subcribeOneChannel(i, urlSubcribe);
           }
           console.log('================Subcribe all channel=============');

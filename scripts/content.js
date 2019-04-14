@@ -99,7 +99,7 @@ function click_button(data) {
 }
 
 function click_channel(channelID) {
-  var channel = document.querySelectorAll('.channel-switcher-button');
+  var channel = document.querySelectorAll('li.channel-switcher-button a');
   if (channel[channelID]) {
     channel[channelID].click();
     return true;
