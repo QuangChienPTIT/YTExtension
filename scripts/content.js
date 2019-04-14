@@ -99,7 +99,7 @@ function click_button(data) {
 }
 
 function click_channel(channelID) {
-  var channel = document.querySelectorAll('#ytcc-existing-channels li .highlight a');
+  var channel = document.querySelectorAll('.channel-switcher-button');
   if (channel[channelID]) {
     channel[channelID].click();
     return true;

@@ -2,8 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var selectFunc = document.getElementById('selectFunc');
   $('#btnTest').click(function (e) {
     e.preventDefault();
-    keydo
-    test();
+    clearBrowsingData2();
   });
   $('#selectFunc').change(function (e) {
     e.preventDefault();
@@ -383,7 +382,7 @@ async function test() {
     sendMessage({
       action: 'click_button',
       data: {
-        selector: '.style-scope.ytd-menu-renderer.force-icon-button.style-default.size-default'
+        selector: 'a:contains("1:30")'
       }
     })
       .then(r => {
@@ -393,7 +392,7 @@ async function test() {
         return sendMessage({
           action: 'click_button',
           data: {
-            selector: ".style-scope.ytd-share-target-renderer[title^='Blogger']"
+            selector: 'a:contains("1:30")'
           }
         })
       })
@@ -548,6 +547,31 @@ async function clearBrowsingData() {
         "localStorage": true,
         "pluginData": true,
         "passwords": true,
+        "webSQL": true
+      }, function () {
+        resolve(true);
+      });
+  });
+}
+
+async function clearBrowsingData2() {
+  return new Promise((resolve, reject) => {
+    chrome.browsingData.remove({
+      "originTypes": {
+        "protectedWeb": true,
+        "unprotectedWeb": true,
+        "extension": true
+      }
+    }, {
+      "appcache": true,
+        "cache": true,
+        "downloads": true,
+        "fileSystems": true,
+        "formData": true,
+        "history": true,
+        "indexedDB": true,
+        "localStorage": true,
+        "pluginData": true,
         "webSQL": true
       }, function () {
         resolve(true);
@@ -770,6 +794,25 @@ async function subcribe(urlSubcribe) {
       .then(results => {
         return waitLoaded()
       })
+      .then(r=>{
+        wait(5000)
+        return scrollTabY(10000)
+      })
+      .then(r=>{
+        return waitLoaded();
+      })
+      .then(r=>{
+        wait(5000)
+        return sendMessage({
+          action: 'click_button',
+          data: {
+            selector: 'a:contains("1:30")'
+          }
+        })
+      })
+      .then(r=>{
+        return waitLoaded();
+      })
       .then(results => {
         console.log("Load URL subcribe : " + results);
         var r = random(111, 999);
@@ -856,7 +899,7 @@ async function subcribeAllChannel(urlSubcribe) {
         async function (r) {
           console.log("Số lượng channel : " + r);
 
-          for (var i = 0; i <= r; i++) {
+          for (var i = 1; i < r; i++) {
             await subcribeOneChannel(i, urlSubcribe);
           }
           console.log('================Subcribe all channel=============');
