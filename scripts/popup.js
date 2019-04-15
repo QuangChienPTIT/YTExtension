@@ -84,6 +84,7 @@ const URLYOUTUBE = {
   HOMEPAGE: "https://www.youtube.com/",
   ALLCHANNEL: "https://www.youtube.com/channel_switcher?next=%2Faccount&feature=settings",
   SUBURL: "https://www.youtube.com/watch?v=3CAH4cDrjeQ",
+  TREND:"https://www.youtube.com/feed/trending",
   URLCHANNEL: [
     "https://www.youtube.com/watch?v=Q3teJIoHBfA",
     "https://www.youtube.com/watch?v=GwCUbhE0TY0&t=24s",
@@ -789,7 +790,7 @@ async function playVideo(){
       return sendMessage({
         action:'click_button',
         data: {
-          selector: '.ytp-cued-thumbnail-overlay'
+          selector: '.video-stream.html5-main-video'
         }
       })
     })
@@ -979,14 +980,24 @@ async function reactOneChannel(channelID) {
       })
       .then(r => {
         wait(random(5000, 10000));
-        return updateUrl(randomArr(URLYOUTUBE.URLCHANNEL));
+        return updateUrl(URLYOUTUBE.TREND);
       })
       .then(r => {
         return waitLoaded();
       })
+      .then(r=>{
+        wait(2000);
+        return sendMessage({
+          action:'click_video_random'
+        })
+      })
+      .then(r=>{
+        wait(2000);
+        return waitLoaded();
+      })
       .then(r => {
         wait(random(20000, 30000));
-        console.log('Load URL channel : ' + r);
+        console.log('Click to Video trend: ' + r);
         return sendMessage({
           action: 'click_button',
           data: {
@@ -1001,14 +1012,25 @@ async function reactOneChannel(channelID) {
       .then(r => {
         console.log('Like comment :' + r);
         wait(random(5000, 10000));
-        return updateUrl(randomArr(URLYOUTUBE.URLCHANNEL));
-      })
+        return updateUrl(URLYOUTUBE.TREND);
+      })      
       .then(r => {
+        wait(2000);
+        return waitLoaded();
+      })
+      .then(r=>{
+        console.log("Update URL Trend : "+r);
+        return sendMessage({
+          action: 'click_video_random'
+        })
+      })
+      .then(r=>{
+        wait(2000);
         return waitLoaded();
       })
       .then(r => {
         wait(random(20000, 30000));
-        console.log('Load URL channel : ' + r);
+        console.log('Click to video trend : ' + r);
         return sendMessage({
           action: 'click_button',
           data: {
