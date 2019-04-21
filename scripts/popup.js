@@ -905,7 +905,7 @@ async function subcribeAllChannel(urlSubcribe) {
         async function (r) {
           console.log("Số lượng channel : " + r);
 
-          for (var i = 0; i < r; i++) {
+          for (var i = 1; i < r; i++) {
             await subcribeOneChannel(i, urlSubcribe);
           }
           console.log('================Subcribe all channel=============');
@@ -944,7 +944,7 @@ async function react() {
       })
       .then(
         async function (r) {
-          for (var i = 0; i < r; i++) {
+          for (var i = 1; i < r; i++) {
             await reactOneChannel(i)
           }
           console.log('================React all channel=============');
@@ -994,6 +994,12 @@ async function reactOneChannel(channelID) {
       .then(r=>{
         wait(2000);
         return waitLoaded();
+      })
+      .then(r=>{
+        return playVideo();
+      })
+      .then(r=>{
+        return waitLoaded()
       })
       .then(r => {
         wait(random(20000, 30000));
@@ -1063,7 +1069,7 @@ async function reactSub() {
       })
       .then(
         async function (r) {
-          for (var i = 0; i < r; i++) {
+          for (var i = 1; i < r; i++) {
             await reactSubOneChannel(i)
           }
           console.log('================React sub all channel=============');
@@ -1155,6 +1161,9 @@ async function reactSubChannel(channelID) {
         console.log('Click to video ' + r);
         return waitLoaded();
       })
+      .then(r=>{
+        return playVideo();
+      })
       .then(r => {
         wait(random(3000, 5000))
         return reactVideo();
@@ -1214,6 +1223,10 @@ async function searchByText(searchText) {
             selector: 'button#search-icon-legacy'
           }
         })
+      })
+      .then(r=>{
+        wait(3000);
+        return waitLoaded();
       })
       .then(r => {
         console.log('Click search : ' + r);
