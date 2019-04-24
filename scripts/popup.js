@@ -2,7 +2,13 @@ document.addEventListener('DOMContentLoaded', function () {
   var selectFunc = document.getElementById('selectFunc');
   $('#btnTest').click(function (e) {
     e.preventDefault();
-    playVideo();
+    updateUrl('https://www.youtube.com/watch?v=JnoLnsx-Cek')
+    .then(r=>{
+      return waitLoaded();
+    })
+    .then(r=>{
+      return playVideo();
+    })
   });
   $('#selectFunc').change(function (e) {
     e.preventDefault();
@@ -810,13 +816,24 @@ async function subcribe(urlSubcribe) {
     var txt = text[random(0, text.length - 1)]
     searchByText(txt)
       .then(r => {
-        updateUrl(urlSubcribe)
+        return updateUrl(urlSubcribe)
       })
       .then(r=>{
+        wait(2000);
         return waitLoaded();
       })
       .then(r=>{
-        return playVideo();
+        wait(random(1000,2000));
+        return sendMessage({
+          action : 'click_button',
+          data:{
+            selector: '#thumbnail'
+          }
+        })
+      })
+      .then(r=>{
+        wait(2000);
+        return waitLoaded();
       })
       .then(results => {
         console.log("Load URL subcribe : " + results);
@@ -995,12 +1012,6 @@ async function reactOneChannel(channelID) {
         wait(2000);
         return waitLoaded();
       })
-      .then(r=>{
-        return playVideo();
-      })
-      .then(r=>{
-        return waitLoaded()
-      })
       .then(r => {
         wait(random(20000, 30000));
         console.log('Click to Video trend: ' + r);
@@ -1160,9 +1171,6 @@ async function reactSubChannel(channelID) {
       .then(r => {
         console.log('Click to video ' + r);
         return waitLoaded();
-      })
-      .then(r=>{
-        return playVideo();
       })
       .then(r => {
         wait(random(3000, 5000))
