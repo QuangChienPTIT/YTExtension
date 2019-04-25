@@ -796,7 +796,7 @@ async function playVideo(){
       return sendMessage({
         action:'click_button',
         data: {
-          selector: '.video-stream.html5-main-video'
+          selector: '.ytp-cued-thumbnail-overlay-image'
         }
       })
     })
@@ -823,17 +823,7 @@ async function subcribe(urlSubcribe) {
         return waitLoaded();
       })
       .then(r=>{
-        wait(random(1000,2000));
-        return sendMessage({
-          action : 'click_button',
-          data:{
-            selector: '#thumbnail'
-          }
-        })
-      })
-      .then(r=>{
-        wait(2000);
-        return waitLoaded();
+        return playVideo();
       })
       .then(results => {
         console.log("Load URL subcribe : " + results);
@@ -850,7 +840,7 @@ async function subcribe(urlSubcribe) {
               console.log('CLick button like video : ' + results);
             })
         }
-        wait(random(10000, 20000));
+        wait(random(120000, 180000));
         return sendMessage({
           action: 'click_button',
           data: {
@@ -859,7 +849,7 @@ async function subcribe(urlSubcribe) {
         })
       })
       .then(results => {
-        wait(10000);
+        wait(600000);
         console.log("CLick button subcribe video : " + results);
       })
       .then(results => {
