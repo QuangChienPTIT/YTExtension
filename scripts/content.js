@@ -93,6 +93,23 @@ function click_button(data) {
   var btn = $(data.selector);
   if (btn) {
     btn[0].click();
+    console.log('Click to : ');
+    console.log(btn[0]);    
+    return true;
+  }
+  return false;
+}
+
+function play_video(data) {
+  var btn = $(data.selector);
+  $(data.selector).click(function (e) { 
+    e.preventDefault();
+    console.log('Click play');
+  });
+  if (btn) {
+    btn[0].click();
+    console.log('Click to : ');
+    console.log(btn[0]);    
     return true;
   }
   return false;
@@ -213,76 +230,81 @@ chrome.runtime.onMessage.addListener(
       click_btn_next_email();
       sendResponse("Click button next email");
     }
-    if (request.action == 'fill_form_password') {
+    if (request.action === 'fill_form_password') {
       var res = fill_form_password(request.data.value)
       sendResponse(res)
     }
-    if (request.action == 'click_btn_next_password') {
+    if (request.action === 'click_btn_next_password') {
       click_btn_next_password();
       sendResponse("Click button next password")
     }
-    if (request.action == 'click_btn_subcribe') {
+    if (request.action === 'click_btn_subcribe') {
       click_btn_subcribe()
       sendResponse("Click subcriber")
     }
-    if (request.action == 'get_status_load') {
+    if (request.action === 'get_status_load') {
       var res = get_status_load()
       sendResponse(res)
     }
-    if (request.action == 'click_button') {
+    if (request.action === 'click_button') {
       var res = click_button(request.data);
       sendResponse(res)
     }
-    if (request.action == 'fill_form') {
+    if (request.action === 'fill_form') {
       var res = fill_form(request.data)
       sendResponse(res)
     }
-    if (request.action == 'fill_input') {
+    if (request.action === 'fill_input') {
       var res = fill_input(request.data)
       sendResponse(res)
     }
-    if (request.action == 'check_Count_Channel') {
+    if (request.action === 'check_Count_Channel') {
       var res = check_Count_Channel()
       sendResponse(res);
     }
-    if (request.action == 'is_send_phone') {
+    if (request.action === 'is_send_phone') {
       var res = is_send_phone();
       sendResponse(res);
     }
-    if (request.action == 'click_channel') {
+    if (request.action === 'click_channel') {
       var res = click_channel(request.data.channelID);
       sendResponse(res);
     }
-    if (request.action == 'fill_comment_video') {
+    if (request.action === 'fill_comment_video') {
       var res = fill_comment_video(request.data.content);
       sendResponse(res);
     }
-    if (request.action == 'scroll_tab') {
+    if (request.action === 'scroll_tab') {
       var res = scroll_tab(request.data.positionY);
       sendResponse(res);
     }
-    if (request.action == 'like_comment') {      
+    if (request.action === 'like_comment') {      
       var res = like_comment();
       sendResponse(res);
     }
-    if (request.action == 'check_Sub_Count_Channel') {      
+    if (request.action === 'check_Sub_Count_Channel') {      
       var res = check_Sub_Count_Channel();
       sendResponse(res);
     }
-    if (request.action == 'click_channel_sub') {        
+    if (request.action === 'click_channel_sub') {        
       var res = click_channel_sub(request.data.channelID);
       sendResponse(res);
     }
 
-    if(request.action =='click_video_random'){
+    if(request.action === 'click_video_random'){
       var res = click_video_random();
       sendResponse(res);
     }
-    if(request.action =='get_count_of_element'){
+    if(request.action === 'get_count_of_element'){
       console.log(request.data);
       
       var res = get_count_of_element(request.data);
       sendResponse(res);
     }
+    if(request.action === 'play_video'){   
+      var res = play_video(request.data);
+      sendResponse(res);
+    }
+    
     
   });

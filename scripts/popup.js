@@ -2,13 +2,22 @@ document.addEventListener('DOMContentLoaded', function () {
   var selectFunc = document.getElementById('selectFunc');
   $('#btnTest').click(function (e) {
     e.preventDefault();
-    updateUrl('https://www.youtube.com/watch?v=JnoLnsx-Cek')
-    .then(r=>{
-      return waitLoaded();
-    })
-    .then(r=>{
-      return playVideo();
-    })
+    // updateUrl('https://www.youtube.com/watch?v=JnoLnsx-Cek')
+    // .then(r=>{
+    //   return waitLoaded();
+    // })
+    // .then(r=>{
+    //   wait(10000)
+    //   return playVideo();
+    // })
+    subcribeOneChannel(1,'https://www.youtube.com/watch?v=JnoLnsx-Cek');
+    // subcribe('https://www.youtube.com/watch?v=JnoLnsx-Cek');
+    // sendMessage({
+    //   action: 'play_video',
+    //   data:{
+    //     selector:'.ytp-cued-thumbnail-overlay-image'
+    //   }
+    // })
   });
   $('#selectFunc').change(function (e) {
     e.preventDefault();
@@ -534,13 +543,31 @@ async function getTokenSuccess(username, password) {
     });
 }
 
-async function clearBrowsingData() {
+async function clearTest() {
   return new Promise((resolve, reject) => {
     chrome.browsingData.remove({
       "originTypes": {
         "protectedWeb": true,
         "unprotectedWeb": true,
         "extension": true
+      }
+    }, {
+      "localStorage": true,
+        "pluginData": true,
+      }, function () {
+        resolve(true);
+      });
+  });
+}
+
+async function clearBrowsingData() {
+  return new Promise((resolve, reject) => {
+    chrome.browsingData.remove({
+      "originTypes": {
+        "protectedWeb": true,
+        "unprotectedWeb": true,
+        "extension": true,
+        "serviceWorkers": true,
       }
     }, {
         "appcache": true,
@@ -791,12 +818,13 @@ async function createManyChannel(countChannel) {
 /////////////////////////SUBCRIBE//////////////////////////////////////////
 async function playVideo(){
   return new Promise((resolve,reject)=>{
-    waitLoaded()
+    clearTest()
     .then(r=>{
+      wait(2000)
       return sendMessage({
-        action:'click_button',
+        action:'play_video',
         data: {
-          selector: '.ytp-cued-thumbnail-overlay-image'
+          selector: '#dismissable > div.metadata.style-scope.ytd-compact-video-renderer > a'
         }
       })
     })
@@ -819,12 +847,17 @@ async function subcribe(urlSubcribe) {
         return updateUrl(urlSubcribe)
       })
       .then(r=>{
-        wait(2000);
-        return waitLoaded();
+        return waitLoaded()
       })
       .then(r=>{
-        return playVideo();
-      })
+        wait(5000)
+        return sendMessage({
+          action:'play_video',
+          data: {
+            selector: "button[title='Phát (k)']"
+          }
+        })
+      })      
       .then(results => {
         console.log("Load URL subcribe : " + results);
         var r = random(111, 999);
@@ -849,7 +882,7 @@ async function subcribe(urlSubcribe) {
         })
       })
       .then(results => {
-        wait(600000);
+        wait(60000);
         console.log("CLick button subcribe video : " + results);
       })
       .then(results => {
@@ -865,10 +898,11 @@ async function subcribeOneChannel(channelID, urlSubcribe) {
   return new Promise((resolve, reject) => {
     resetDcom()
       .then(r => {
+        wait(2000)
         return updateUrl(URLYOUTUBE.ALLCHANNEL)
       })
       .then(r => {
-        wait(random(5000, 10000));
+        wait(2000)
         return waitLoaded();
       })
       .then(r => {
@@ -882,11 +916,12 @@ async function subcribeOneChannel(channelID, urlSubcribe) {
         })
       })
       .then(r => {
+        wait(2000)
         console.log("CLick channel " + channelID+" : "+r);
-        wait(5000);
         return waitLoaded();
       })
       .then(r => {
+        wait(2000)
         return subcribe(urlSubcribe);
       })
       .then(r => {
