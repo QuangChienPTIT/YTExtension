@@ -838,26 +838,38 @@ async function playVideo(){
   })
 }
 async function subcribe(urlSubcribe) {
+  // wait(3000);
+  // updateUrl('https://www.youtube.com/watch?v=JnoLnsx-Cek').then(callback => {
+  //   sendMessage({
+  //     action: 'play_video',
+  //     data: {}
+  //   })
+  // });
   return new Promise((resolve, reject) => {
     var searchText = document.getElementById('searchText').value;
     var text = searchText.split("\n");
     var txt = text[random(0, text.length - 1)]
     searchByText(txt)
       .then(r => {
+        console.log('1'+r);
+        
         return updateUrl(urlSubcribe)
       })
       .then(r=>{
+        console.log('2'+r);
         return waitLoaded()
       })
-      .then(r=>{
-        wait(5000)
-        return sendMessage({
-          action:'play_video',
-          data: {
-            selector: "button[title='Phát (k)']"
-          }
-        })
-      })      
+      // .then(r=>{
+      //   wait(5000)
+      //   console.log('3'+r);
+      //   return sendMessage({
+      //     action:'play_video',
+      //     data: {
+      //       selector: "#movie_player > div.ytp-cued-thumbnail-overlay"
+      //       //  selector: "#dismissable > div.metadata.style-scope.ytd-compact-video-renderer > a"
+      //     }
+      //   })
+      // })      
       .then(results => {
         console.log("Load URL subcribe : " + results);
         var r = random(111, 999);
@@ -873,7 +885,7 @@ async function subcribe(urlSubcribe) {
               console.log('CLick button like video : ' + results);
             })
         }
-        wait(random(120000, 180000));
+        wait(random(120000, 150000));
         return sendMessage({
           action: 'click_button',
           data: {
@@ -881,10 +893,23 @@ async function subcribe(urlSubcribe) {
           }
         })
       })
+      .then(r=>{
+        wait(30000)
+        console.log('3'+r);
+        console.log("CLick button subcribe video : " + r);
+        return sendMessage({
+          action:'play_video',
+          data: {
+            selector: "#movie_player > div.ytp-cued-thumbnail-overlay"
+            //  selector: "#dismissable > div.metadata.style-scope.ytd-compact-video-renderer > a"
+          }
+        })
+      }) 
       .then(results => {
-        wait(60000);
-        console.log("CLick button subcribe video : " + results);
+        wait(3000);
+        console.log("CLick pause video : " + results);
       })
+      
       .then(results => {
         resolve(true);
       })

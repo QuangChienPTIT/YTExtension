@@ -102,14 +102,9 @@ function click_button(data) {
 
 function play_video(data) {
   var btn = $(data.selector);
-  $(data.selector).click(function (e) { 
-    e.preventDefault();
-    console.log('Click play');
-  });
-  if (btn) {
+  if (btn.length) {
+    wait(2000); 
     btn[0].click();
-    console.log('Click to : ');
-    console.log(btn[0]);    
     return true;
   }
   return false;
