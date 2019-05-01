@@ -906,8 +906,9 @@ async function subcribe(urlSubcribe) {
         })
       }) 
       .then(results => {
-        wait(3000);
         console.log("CLick pause video : " + results);
+        wait(600000);        
+        return waitLoaded();
       })
       
       .then(results => {
