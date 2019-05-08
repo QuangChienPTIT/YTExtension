@@ -43,9 +43,9 @@ function check_Count_Channel() {
   return count;
 }
 
-function check_Sub_Count_Channel(){
+function check_Sub_Count_Channel() {
   var countChannel = document.querySelectorAll('a.yt-simple-endpoint.style-scope.ytd-channel-renderer')
-  var count  = countChannel.length;
+  var count = countChannel.length;
   return count;
 }
 
@@ -53,12 +53,12 @@ function is_send_phone() {
   // var btn = $('.submit-buttons #next-button');
   // if (btn.length!=0) return true;
   var input = $('.i18n_phone_number_input-input input#signupidvinput');
-  if(input.length==1) return true;
+  if (input.length == 1) return true;
   // if ($('html:contains("trước khi bạn có thể bắt đầu sử dụng tài khoản đó")').length) return true;
   return false;
 }
 
-function get_count_of_element(data){
+function get_count_of_element(data) {
   var ele = document.querySelectorAll(data.selector);
   return ele.length;
 }
@@ -94,7 +94,7 @@ function click_button(data) {
   if (btn) {
     btn[0].click();
     console.log('Click to : ');
-    console.log(btn[0]);    
+    console.log(btn[0]);
     return true;
   }
   return false;
@@ -103,7 +103,7 @@ function click_button(data) {
 function play_video(data) {
   var btn = $(data.selector);
   if (btn.length) {
-    wait(2000); 
+    wait(2000);
     btn[0].click();
     return true;
   }
@@ -120,7 +120,7 @@ function click_channel(channelID) {
 }
 function click_channel_sub(channelID) {
   console.log(channelID);
-  
+
   var channel = document.querySelectorAll('a.yt-simple-endpoint.style-scope.ytd-channel-renderer');
   if (channel[channelID]) {
     channel[channelID].click();
@@ -129,35 +129,52 @@ function click_channel_sub(channelID) {
   return false;
 }
 
-function like_comment(){
+function like_comment() {
   var btn = document.querySelectorAll('#like-button');
-  var index = btn.length-random(btn.length,btn.length-5);  
-  if(btn) {
+  var index = btn.length - random(btn.length, btn.length - 5);
+  if (btn) {
     btn[index].click();
     return index;
   }
   return false;
 }
 
-function click_video_random(){
+function click_video_random() {
   var video = document.querySelectorAll('#thumbnail')
-  if(video){
-    var id = random(0,video.length-1)
-    console.log('idVideo : '+id);    
+  if (video) {
+    var id = random(0, video.length - 1)
+    console.log('idVideo : ' + id);
     video[id].click();
     return id;
   }
   return false;
 }
 
-function ctrl_click(data){
-  var btn = document.getElementById(data.selector).dispatchEvent(new MouseEvent("click",{ctrlKey:true}))
+function ctrl_click(data) {
+  var btn = document.getElementById(data.selector).dispatchEvent(new MouseEvent("click", { ctrlKey: true }))
 }
 // ============================================= HANDLE=============================================
 
-function scroll_tab(positionY){
-  window.scrollBy(0,positionY);
+function scroll_tab(positionY) {
+  window.scrollBy(0, positionY);
   return true;
+}
+
+//====================================STORAGE=======================================================
+function addLocalStorage(data) {
+  if (typeof (localStorage) !== undefined) {
+    localStorage.setItem(data.key, data.value);
+    console.log(localStorage.getItem(data.key))
+    return true;
+  }
+  return 'Browser not support localStorage';
+}
+
+function getLocalStorage(data) {
+  if (typeof (localStorage) !== undefined) {
+    return localStorage.getItem(data.key)
+  }
+  return 'Browser not support localStorage';
 }
 // ============================================= FILL =============================================
 
@@ -193,9 +210,9 @@ function fill_form(data) {
   return false;
 }
 
-function fill_input(data){
+function fill_input(data) {
   var input = $(data.selector);
-  if(input){
+  if (input) {
     input.val(data.value);
     return true;
   }
@@ -204,7 +221,7 @@ function fill_input(data){
 
 
 function fill_comment_video(content) {
-  var a =document.getElementById('placeholder-area')
+  var a = document.getElementById('placeholder-area')
   a.click();
   var input = $('#contenteditable-textarea');
   if (input) {
@@ -219,7 +236,6 @@ function fill_comment_video(content) {
 chrome.runtime.onMessage.addListener(
 
   function (request, sender, sendResponse) {
-
     data = {};
     if (request.action == 'click_btn_next_email') {
       click_btn_next_email();
@@ -273,33 +289,41 @@ chrome.runtime.onMessage.addListener(
       var res = scroll_tab(request.data.positionY);
       sendResponse(res);
     }
-    if (request.action === 'like_comment') {      
+    if (request.action === 'like_comment') {
       var res = like_comment();
       sendResponse(res);
     }
-    if (request.action === 'check_Sub_Count_Channel') {      
+    if (request.action === 'check_Sub_Count_Channel') {
       var res = check_Sub_Count_Channel();
       sendResponse(res);
     }
-    if (request.action === 'click_channel_sub') {        
+    if (request.action === 'click_channel_sub') {
       var res = click_channel_sub(request.data.channelID);
       sendResponse(res);
     }
 
-    if(request.action === 'click_video_random'){
+    if (request.action === 'click_video_random') {
       var res = click_video_random();
       sendResponse(res);
     }
-    if(request.action === 'get_count_of_element'){
+    if (request.action === 'get_count_of_element') {
       console.log(request.data);
-      
+
       var res = get_count_of_element(request.data);
       sendResponse(res);
     }
-    if(request.action === 'play_video'){   
+    if (request.action === 'play_video') {
       var res = play_video(request.data);
       sendResponse(res);
     }
-    
-    
+    if (request.action === 'addLocalStorage') {
+      var res = addLocalStorage(request.data);
+      sendResponse(res);
+    }
+    if (request.action === 'getLocalStorage') {
+      var res = getLocalStorage(request.data);
+      sendResponse(res);
+    }
+
+
   });

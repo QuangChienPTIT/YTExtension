@@ -2,22 +2,14 @@ document.addEventListener('DOMContentLoaded', function () {
   var selectFunc = document.getElementById('selectFunc');
   $('#btnTest').click(function (e) {
     e.preventDefault();
-    // updateUrl('https://www.youtube.com/watch?v=JnoLnsx-Cek')
-    // .then(r=>{
-    //   return waitLoaded();
-    // })
-    // .then(r=>{
-    //   wait(10000)
-    //   return playVideo();
-    // })
-    subcribeOneChannel(1,'https://www.youtube.com/watch?v=JnoLnsx-Cek');
-    // subcribe('https://www.youtube.com/watch?v=JnoLnsx-Cek');
-    // sendMessage({
-    //   action: 'play_video',
-    //   data:{
-    //     selector:'.ytp-cued-thumbnail-overlay-image'
-    //   }
-    // })
+    waitLoaded()
+    .then(r=>{
+      return getLocalStorage('chien');
+    })
+    .then(r=>{
+      console.log(r)
+    })
+    
   });
   $('#selectFunc').change(function (e) {
     e.preventDefault();
@@ -99,7 +91,7 @@ const URLYOUTUBE = {
   HOMEPAGE: "https://www.youtube.com/",
   ALLCHANNEL: "https://www.youtube.com/channel_switcher?next=%2Faccount&feature=settings",
   SUBURL: "https://www.youtube.com/watch?v=3CAH4cDrjeQ",
-  TREND:"https://www.youtube.com/feed/trending",
+  TREND: "https://www.youtube.com/feed/trending",
   URLCHANNEL: [
     "https://www.youtube.com/watch?v=Q3teJIoHBfA",
     "https://www.youtube.com/watch?v=GwCUbhE0TY0&t=24s",
@@ -391,45 +383,60 @@ async function checkSubcribeCount(subCount) {
 
 }
 
-// ========================================================================= ASYNC FUNCTION ====================================================================
-
-async function test() {
+async function addLocalStorage(key, value) {
   return new Promise((resolve, reject) => {
+
     sendMessage({
-      action: 'click_button',
+      action: 'addLocalStorage',
       data: {
-        selector: 'a:contains("1:30")'
+        key: key,
+        value: value
       }
     })
-      .then(r => {
-        return waitLoaded()
-      })
-      .then(r => {
-        return sendMessage({
-          action: 'click_button',
-          data: {
-            selector: 'a:contains("1:30")'
-          }
-        })
-      })
-      .then(r => {
-        wait(5000);
-        return sendMessageToOther({
-          action: 'click_button',
-          data: {
-            selector: '#submitButtons'
-          },
-          id: 1
-        })
-      })
       .then(r => {
         resolve(r);
       })
       .catch(e => {
+        reject(e)
+      })
+  })
+}
+
+async function getLocalStorage(key) {
+  return new Promise((resolve, reject) => {
+        return sendMessage({
+          action: 'getLocalStorage',
+          data: {
+            key: key
+          }
+        })
+      .then(r=>{
+        resolve(r)
+      })
+      .catch(e=>{
         reject(e);
       })
   })
 }
+
+// ========================================================================= ASYNC FUNCTION ====================================================================
+
+async function test() {
+  return new Promise((resolve, reject) => {
+    waitLoaded()
+      .then(r => {
+        return sendMessage({
+          action: 'addLocalStorage',
+          data: {
+            key: 'chien',
+            value: 'dep trai'
+          }
+        })
+      })
+  })
+}
+
+
 
 function sendMessage(data) {
   return new Promise((resolve, reject) => {
@@ -552,7 +559,7 @@ async function clearTest() {
         "extension": true
       }
     }, {
-      "localStorage": true,
+        "localStorage": true,
         "pluginData": true,
       }, function () {
         resolve(true);
@@ -597,7 +604,7 @@ async function clearBrowsingData2() {
         "extension": true
       }
     }, {
-      "appcache": true,
+        "appcache": true,
         "cache": true,
         "downloads": true,
         "fileSystems": true,
@@ -816,25 +823,25 @@ async function createManyChannel(countChannel) {
   }
 }
 /////////////////////////SUBCRIBE//////////////////////////////////////////
-async function playVideo(){
-  return new Promise((resolve,reject)=>{
+async function playVideo() {
+  return new Promise((resolve, reject) => {
     clearTest()
-    .then(r=>{
-      wait(2000)
-      return sendMessage({
-        action:'play_video',
-        data: {
-          selector: '#dismissable > div.metadata.style-scope.ytd-compact-video-renderer > a'
-        }
+      .then(r => {
+        wait(2000)
+        return sendMessage({
+          action: 'play_video',
+          data: {
+            selector: '#dismissable > div.metadata.style-scope.ytd-compact-video-renderer > a'
+          }
+        })
       })
-    })
-    .then(r=>{
-      resolve(r)
-    })
-    .catch(e=>{
-      reject(e)
-    })
-    
+      .then(r => {
+        resolve(r)
+      })
+      .catch(e => {
+        reject(e)
+      })
+
   })
 }
 async function subcribe(urlSubcribe) {
@@ -851,12 +858,12 @@ async function subcribe(urlSubcribe) {
     var txt = text[random(0, text.length - 1)]
     searchByText(txt)
       .then(r => {
-        console.log('1'+r);
-        
+        console.log('1' + r);
+
         return updateUrl(urlSubcribe)
       })
-      .then(r=>{
-        console.log('2'+r);
+      .then(r => {
+        console.log('2' + r);
         return waitLoaded()
       })
       // .then(r=>{
@@ -893,24 +900,24 @@ async function subcribe(urlSubcribe) {
           }
         })
       })
-      .then(r=>{
+      .then(r => {
         wait(30000)
-        console.log('3'+r);
+        console.log('3' + r);
         console.log("CLick button subcribe video : " + r);
         return sendMessage({
-          action:'play_video',
+          action: 'play_video',
           data: {
             selector: "#movie_player > div.ytp-cued-thumbnail-overlay"
             //  selector: "#dismissable > div.metadata.style-scope.ytd-compact-video-renderer > a"
           }
         })
-      }) 
+      })
       .then(results => {
         console.log("CLick pause video : " + results);
-        wait(1800000);        
+        wait(1800000);
         return waitLoaded();
       })
-      
+
       .then(results => {
         resolve(true);
       })
@@ -943,7 +950,7 @@ async function subcribeOneChannel(channelID, urlSubcribe) {
       })
       .then(r => {
         wait(2000)
-        console.log("CLick channel " + channelID+" : "+r);
+        console.log("CLick channel " + channelID + " : " + r);
         return waitLoaded();
       })
       .then(r => {
@@ -966,17 +973,24 @@ async function subcribeAllChannel(urlSubcribe) {
         return waitLoaded()
       })
       .then(r => {
-        wait(random(5000, 10000));
+        // wait(random(5000, 10000));
         return getChannelCount();
       })
       .then(
         async function (r) {
           console.log("Số lượng channel : " + r);
-
-          for (var i = 1; i < r; i++) {
+          var thisChannel = await getLocalStorage(urlSubcribe).then(r=>r);
+          if(thisChannel===null){
+            thisChannel=0;
+          }
+          thisChannel=parseInt(thisChannel);
+          var i = parseInt(thisChannel)+1;
+          for (; i<=thisChannel+10&&i<=r; i++) {
+            console.log('Channel so '+i)
             await subcribeOneChannel(i, urlSubcribe);
           }
-          console.log('================Subcribe all channel=============');
+          await addLocalStorage(urlSubcribe,i-1);
+          console.log('================Subcribe complete=============');
         }
 
       )
@@ -1053,13 +1067,13 @@ async function reactOneChannel(channelID) {
       .then(r => {
         return waitLoaded();
       })
-      .then(r=>{
+      .then(r => {
         wait(2000);
         return sendMessage({
-          action:'click_video_random'
+          action: 'click_video_random'
         })
       })
-      .then(r=>{
+      .then(r => {
         wait(2000);
         return waitLoaded();
       })
@@ -1081,18 +1095,18 @@ async function reactOneChannel(channelID) {
         console.log('Like comment :' + r);
         wait(random(5000, 10000));
         return updateUrl(URLYOUTUBE.TREND);
-      })      
+      })
       .then(r => {
         wait(2000);
         return waitLoaded();
       })
-      .then(r=>{
-        console.log("Update URL Trend : "+r);
+      .then(r => {
+        console.log("Update URL Trend : " + r);
         return sendMessage({
           action: 'click_video_random'
         })
       })
-      .then(r=>{
+      .then(r => {
         wait(2000);
         return waitLoaded();
       })
@@ -1249,7 +1263,7 @@ async function reactVideo() {
         return likeComment();
       })
       .then(r => {
-        wait(random(20000,30000))
+        wait(random(20000, 30000))
         resolve('React video ' + r)
       })
       .catch(e => {
@@ -1283,7 +1297,7 @@ async function searchByText(searchText) {
           }
         })
       })
-      .then(r=>{
+      .then(r => {
         wait(3000);
         return waitLoaded();
       })
@@ -1445,20 +1459,20 @@ async function oneLinkcollider(oneContent) {
   })
 }
 
-async function linkcollider5min(){
-  return new Promise((resolve,reject)=>{
-    console.log("Load url autosurf");    
+async function linkcollider5min() {
+  return new Promise((resolve, reject) => {
+    console.log("Load url autosurf");
     updateUrl('http://www.linkcollider.com/page/activity/autosurf')
-    .then(r=>{
-      return waitLoaded();
-    })
-    .then(r=>{
-      wait(300000);
-      resolve(r)
-    })
-    .catch(e=>{
-      reject(e);
-    })
+      .then(r => {
+        return waitLoaded();
+      })
+      .then(r => {
+        wait(300000);
+        resolve(r)
+      })
+      .catch(e => {
+        reject(e);
+      })
   })
 }
 
