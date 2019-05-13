@@ -1546,9 +1546,9 @@ function get_token(url) {
 async function dcom(flag) {
   var temp = (flag) ? URL.DCOM_CONNECT : URL.DCOM_DISCONNECT;
   return new Promise((resolve, reject) => {
-    updateUrl(temp).then(function (results) {
+    // updateUrl(temp).then(function (results) {
       resolve(true);
-    });
+    // });
   })
 }
 
